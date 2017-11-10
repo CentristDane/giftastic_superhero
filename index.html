@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Giftastic</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<body>
+    <div id="buttons"></div>
+    <br>
+    <br>
+    <form id="hero-form">
+        <label class="thing1" for="hero-input"><h2>Pick your favorite hero</h2></label>
+        <!-- Text Input Box -->
+        <input type="text" id="hero-input">
+        <br>
+        <!-- Submit Button -->
+        <input id="select-hero" type="submit" value="GO!">
+    </form>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript">
+    var hero;
+    var heroInput = ["deadpool"];
+    var heroArray = ["batman", "superman", "ironman"];
+    var picture;
+
+    function makeButtons() {
+        heroArray.push(heroInput);
+        for (var i = 0; i < heroArray.length; i++) {
+            var letterBtn = $("<button>");
+            letterBtn.addClass("letter-button letter letter-button-color");
+            letterBtn.attr("data-letter", heroArray[i]);
+            letterBtn.text(heroArray[i]);
+            $("#buttons").append(letterBtn);
+        }
+    }
+    makeButtons();
+
+    function addHero() {
+        $(".letter-button").on("click", function() {
+            $(".display").empty();
+            hero = $(this).attr("data-letter");
+            console.log($("data-letter"))
+            var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + hero + "&api_key=3YukoGbTRvmqTSTvYGvZDsLaYxr3o1kR&limit=10";
+            $.ajax({
+                url: queryURL,
+                method: 'GET'
+            }).done(function(response) {
+                for (var i = 0; i < 11; i++) {
+
+                    var heroGiff = $("<div>");
+                    var heroPic = $('<img class="gif playing" src="' + response.data[i].images.fixed_height_still.url + '">')
+                    heroPic.attr("data-state", "still");
+                    heroGiff.append(heroPic);
+
+                    $('.gif').on('click', function() {
+                        var src = $(this).attr("src");
+
+                        if ($(this).hasClass('playing')) {
+                            $(this).attr('src', src.replace(/\_s.gif/i, ".gif"));
+                            $(this).removeClass('playing');
+                        } else {
+                            $(this).attr('src', src.replace(/\.gif/i, "_s.gif"));
+                            $(this).addClass('playing');
+
+                        }
+
+                    })
+                    var rating = 
+                    $(".display").append("<p><strong> Rating " +  response.data[i].rating);
+                    $(".display").append(heroGiff);
+                }
+            });
+        });
+    }
+    addHero();
+    $("#select-hero").on("click", function(event) {
+        event.preventDefault();
+        $("#buttons").empty();
+        heroInput = $("#hero-input").val().trim();
+        makeButtons();
+        addHero();
+    });
+    // $(document).on("click", ".change", move);
+    // function move(){
+    //         $(this).remove().append('<img src="' + response.data[i].images.fixed_height.url + '" class="animate">');
+
+    //}
+    // $(".change").on("click", function() {
+    //    console.log("did it");
+
+    // });
+    </script>
+    <div class="display"></div>
+</body>
+
+</html>
