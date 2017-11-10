@@ -42,7 +42,7 @@
             $(".display").empty();
             hero = $(this).attr("data-letter");
             console.log($("data-letter"))
-            var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + hero + "&api_key=3YukoGbTRvmqTSTvYGvZDsLaYxr3o1kR&limit=10";
+            var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + hero + "&api_key=3YukoGbTRvmqTSTvYGvZDsLaYxr3o1kR&limit=10";
             $.ajax({
                 url: queryURL,
                 method: 'GET'
